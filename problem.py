@@ -3,7 +3,6 @@ import sys
 import math
 import matplotlib
 import numpy
-import problem
 
 """Define a class for every different type of pathfinding problems"""
 class Problem:
@@ -11,12 +10,13 @@ class Problem:
         self.initial_state = initial_state
         self.goal = goal
 
+    """Check if the current node is goal or not"""
     def goal_test(self, node):
         return node.state == self.goal.state
 
     """Returns all available actions from a specific node"""
     def actions(self, node):
-        pass
+        return node.actions
 
 """Represent the maze problem"""
 class Maze(Problem):
@@ -25,24 +25,16 @@ class Maze(Problem):
 
     """Calculate path cost (Or g()) of from initial state to current state"""
     def path_cost(self, node):
-        cost = 0
-        while node.state != self.initial_state:
-            cost += 1
-            node = node.parent_node
-        return cost
+        return len(self.path(node))*30      #Multiply by 30 because each move is 30 pixels, since only straight moves are allowed
 
     """Returns the path to get to this node, from initial node"""
     def path(self, node):
-        path = [node.state]
+        path = []
         tracker = node.parent
-        while node.parent.state !=  self.initial_state:
-            path.insert(0, tracker.state)
+        while tracker !=  self.initial_state:
+            path.insert(0, tracker)
             tracker = tracker.parent
         return path
-
-    """Return actions"""
-    def actions(self, node):
-        return node.actions
 
     """Calculate heuristic for a node, we use Mahattan distance for this one, since I'm not gonna go diagonally """
     def h(self, node):
@@ -69,15 +61,28 @@ class Grid(Node):
         super().__init__(state, actions, parent, cost)
         self.rect = pygame.Rect(state[0], state[1], width, height)
         self.color_code = numpy.asarray(matplotlib.colors.to_rgb(color))*255
+        self.color = color
         self.cost = cost
+        self.color_setted = False
 
     """Draw this grid on screen"""
     def draw(self, display):
         pygame.draw.rect(display, self.color_code, self.rect)
 
     """Change color"""
-    def change_color(self, color):
-        self.color_code = numpy.asarray(matplotlib.colors.to_rgb(color))*255
+    def change_color(self, color, solving=False):
+        if not solving:
+            if not self.color_setted:
+                self.color_code = numpy.asarray(matplotlib.colors.to_rgb(color))*255
+                self.color = color
+                self.color_setted = True
+                return self
+            else:
+                return None
+        else:
+            self.color_code = numpy.asarray(matplotlib.colors.to_rgb(color))*255
+            self.color = color
+            self.color_setted = True
     
     """Add or delete available actions (Delete when a new obstacle is added)"""
     def update_actions(self, actions, add=True):
