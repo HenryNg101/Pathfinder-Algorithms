@@ -25,13 +25,13 @@ class Maze(Problem):
 
     """Calculate path cost (Or g()) of from initial state to current state"""
     def path_cost(self, node):
-        return len(self.path(node))*30      #Multiply by 30 because each move is 30 pixels, since only straight moves are allowed
+        return (len(self.path(node))+1)*30      #Multiply by 30 because each move is 30 pixels, since only straight moves are allowed
 
     """Returns the path to get to this node, from initial node"""
     def path(self, node):
         path = []
         tracker = node.parent
-        while tracker !=  self.initial_state:
+        while tracker !=  self.initial_state and tracker != 1:
             path.insert(0, tracker)
             tracker = tracker.parent
         return path
@@ -83,11 +83,4 @@ class Grid(Node):
             self.color_code = numpy.asarray(matplotlib.colors.to_rgb(color))*255
             self.color = color
             self.color_setted = True
-    
-    """Add or delete available actions (Delete when a new obstacle is added)"""
-    def update_actions(self, actions, add=True):
-        for action in actions:
-            if add:
-                self.actions.append(action)
-            else:
-                self.actions.remove(action)
+            return self
