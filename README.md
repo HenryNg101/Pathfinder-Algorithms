@@ -28,25 +28,28 @@ Testing result on one example input for different algorithms:
     Cost: 2711 px
     Iteration: 1798
 
-- Greedy Best-First Search:
+- Greedy Best-First Search (f(n) = h(n)):
 
 ![Visualize](https://github.com/HenryNg101/Pathfinder-Algorithms/blob/master/Images/Greedy%20Best-First%20Search.png)
 
     Cost: 2259 px
     Iteration: 83
 
-- A*:
+- A* (f(n) = g(n) + h(n)):
 
 ![Visualize](https://github.com/HenryNg101/Pathfinder-Algorithms/blob/master/Images/A*.png)
 
     Cost: 2125 px
     Iteration: 530
 
-- Uniform-cost search:
+- Uniform-cost search (f(n) = g(n)):
 
 ![Visualize](https://github.com/HenryNg101/Pathfinder-Algorithms/blob/master/Images/Uniform-cost%20Search.png)
 
     Cost: 2090 px
     Iteration: 1835
 
-> Note: Iteration here is the number of iteration through frontier (reachable nodes from any node) list through expansion, before the algorithm reachs the goal.
+> Note: 
+> - Iteration here is the number of iteration through frontier (reachable nodes from any node) list through expansion, before the algorithm reachs the goal.
+> - The heuristic function (h(n)) is used in this problem is Euclidean distance between the node and goal node, since the distance of one node to another could be different.
+> - Path cost (g(n)) of a node is calculated by the sums of Euclidean distance between one node and parent node (Do it from the current node, traverse back until there is no more parent node)
