@@ -1,9 +1,9 @@
 import collections
 import problem
 import pygame
-import heapq
 
 #This one I borrowed code and modify from here: https://github.com/aimacode/aima-python/blob/master/utils.py
+#I modified so that it's simpler (Not so efficient, though).
 class PriorityQueue:
     def __init__(self, order='min', f=lambda x: x):
         self.heap = []
@@ -49,7 +49,7 @@ def breadth_first_search(initial_state, goal_state, grids, main_display):
     maze = problem.Maze(initial_state, goal_state)
 
     if maze.goal_test(initial_state):
-        return maze.path(initial_state), maze.path_cost(initial_state)
+        return [], 0
 
     #Initialize the frontier with initial state
     frontier = collections.deque([initial_state])
@@ -69,16 +69,19 @@ def breadth_first_search(initial_state, goal_state, grids, main_display):
             if action not in explored and action.color != "gray":
                 action.set_parent(node)
                 if maze.goal_test(action):
-                    return maze.path(action), maze.path_cost(action), iter
+                    return action.path(initial_state)[0], action.path(initial_state)[1], iter
                 action.change_color("blue", solving=True)
-                #draw_and_update(grids, main_display)
                 frontier.append(action)
         draw_and_update(grids, main_display)
         iter += 1
 
     return False, 0, iter
 
-def best_first_search(initial_state, goal_state, grids, main_display):
+def informed_search(initial_state, goal_state, grids, main_display):
+
+    g = lambda node: node.path(initial_state)[1]
+    h = lambda node: maze.h(node)
+    f = lambda node: g(node) + h(node)
 
     maze = problem.Maze(initial_state, goal_state)
 
@@ -86,7 +89,7 @@ def best_first_search(initial_state, goal_state, grids, main_display):
         return maze.path(initial_state), maze.path_cost(initial_state)
 
     #Initialize the frontier with initial state
-    frontier = PriorityQueue('min', lambda node: abs(node.state[0] - goal_state.state[0]) + abs(node.state[1] - goal_state.state[1]))
+    frontier = PriorityQueue('min', f)
     frontier.append(initial_state)
 
     explored = []
@@ -97,7 +100,7 @@ def best_first_search(initial_state, goal_state, grids, main_display):
         if node in explored:       #Remove repetitive nodes that has been explored
             continue
         if maze.goal_test(node):
-            return maze.path(node), maze.path_cost(node), iter
+            return node.path(initial_state)[0], node.path(initial_state)[1], iter
         if node != initial_state:
             node.change_color("yellow", True)       #Change color of explored node to yellow
         explored.append(node)
@@ -106,7 +109,7 @@ def best_first_search(initial_state, goal_state, grids, main_display):
             if action.color != "gray" and action not in explored:
                 if action in frontier.heap:
                     id = frontier.index(action)
-                    if maze.path_cost(action) < maze.path_cost(frontier.heap[id]):
+                    if action.path(initial_state)[1] < frontier.heap[id].path(initial_state)[1]:
                         del frontier.heap[id]
                         frontier.append(action)
                 else:

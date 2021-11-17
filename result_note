@@ -1,0 +1,18 @@
+BFS:
+- cost: 2711 px
+- iter: 1798
+
+Greedy Best First Search(h(n)):
+- cost: 2259 px
+- iter: 83
+
+A* (g(n) + h(n)):
+- cost: 2125 px
+- iter: 530
+
+Uniform-cost search (g(n)):
+- cost: 2090 px
+- iter: 1835
+
+g(n): Travelled distance
+h(n): Euclidean distance from node to goal
