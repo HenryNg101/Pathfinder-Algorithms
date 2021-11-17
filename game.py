@@ -1,3 +1,4 @@
+
 import pygame
 import sys
 import math
@@ -47,7 +48,7 @@ for row in range(rows):
         grid_row.append(grid_col)    
     grids.append(grid_row)
 
-#Will need to update diagonal moves later. (Or maybe not)
+#Add all adjacent nodes of a node to actions of the node.
 for row in range(rows):
     for col in range(cols):
         actions = []
@@ -93,8 +94,10 @@ while True:
                 sys.exit()
             if key_list[pygame.K_KP_ENTER] and problem_not_solved:
                 if initial_state != None and goal_state != None:
-                    path, path_cost, iteration = solution.best_first_search(initial_state, goal_state, grids, main_display)
-                    if path:
+                    path, path_cost, iteration = solution.informed_search(initial_state, goal_state, grids, main_display)
+                    
+                    #Check this instead of path because nodes are not added to the list until there's a middle node between start and goal node
+                    if path_cost > 0:       
                         for node in path:
                             node.change_color("purple", True)
                             time.sleep(0.01)    #For a bit of animation
