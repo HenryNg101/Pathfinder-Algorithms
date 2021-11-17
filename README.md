@@ -9,7 +9,14 @@ How to use the program:
 
 > python3 game.py
 
-- When starting, set up starting and goal nodes (red and green nodes, respectively). Then, set barricades/walls (the gray nodes). Then, hit Enter to solve it. Press Escape to escape the program.
+- When starting, set up starting and goal nodes (using mouse). Then, set barricades/walls (using mouse). Then, hit Enter to solve it. Press Escape to escape the program.
+- Legends:
+
+    - Red node: Starting node
+    - Green node: Goal node
+    - Gray nodes: Barricades/Walls
+    - Yellow nodes: Explored nodes
+    - Blue nodes: Frontier (Potential) nodes
 
 Testing result on one example input for different algorithms:
 
