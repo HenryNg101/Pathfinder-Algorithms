@@ -17,6 +17,7 @@ How to use the program:
     - Gray nodes: Barricades/Walls
     - Yellow nodes: Explored nodes
     - Blue nodes: Frontier (Potential) nodes
+    - Purple nodes: The path that was found by the algorithm.
 
 Testing result on one example input for different algorithms:
 
