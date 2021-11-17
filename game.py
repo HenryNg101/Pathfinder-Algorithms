@@ -92,7 +92,7 @@ while True:
             key_list = pygame.key.get_pressed()
             if key_list[pygame.K_ESCAPE]:
                 sys.exit()
-            if key_list[pygame.K_KP_ENTER] and problem_not_solved:
+            if key_list[pygame.K_RETURN] and problem_not_solved:
                 if initial_state != None and goal_state != None:
                     path, path_cost, iteration = solution.informed_search(initial_state, goal_state, grids, main_display)
                     
