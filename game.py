@@ -101,7 +101,7 @@ while True:
                 sys.exit()
             if key_list[pygame.K_RETURN] and problem_not_solved:
                 if initial_state != None and goal_state != None:
-                    path, path_cost, iteration = solution.informed_search(initial_state, goal_state, grids, main_display)
+                    path, path_cost, iteration = solution.depth_first_search(initial_state, goal_state, grids, main_display)
                     
                     #Check this instead of path because nodes are not added to the list until there's a middle node between start and goal node
                     if path_cost > 0:       

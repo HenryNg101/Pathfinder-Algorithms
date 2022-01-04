@@ -1,6 +1,6 @@
-import collections
 import problem
 import pygame
+import queue
 
 #This one I borrowed code and modify from here: https://github.com/aimacode/aima-python/blob/master/utils.py
 #I modified so that it's simpler (Not so efficient, though).
@@ -52,26 +52,61 @@ def breadth_first_search(initial_state, goal_state, grids, main_display):
         return [], 0
 
     #Initialize the frontier with initial state
-    frontier = collections.deque([initial_state])
+    frontier = queue.Queue()
+    frontier.put(initial_state)
 
     explored = []
 
     iter = 0
-    while frontier:
-        node = frontier.popleft()
+    while not frontier.empty():
+        node = frontier.get()
         if node in explored:       #Remove repetitive nodes that has been explored
             continue
         if node != initial_state:
             node.change_color("yellow", True)       #Change color of explored node to yellow
         explored.append(node)
 
-        for action in maze.actions(node):
+        for action in node.actions:
             if action not in explored and action.color != "gray":
                 action.set_parent(node)
                 if maze.goal_test(action):
                     return action.path(initial_state)[0], action.path(initial_state)[1], iter
                 action.change_color("blue", solving=True)
-                frontier.append(action)
+                frontier.put(action)
+        draw_and_update(grids, main_display)
+        iter += 1
+
+    return False, 0, iter
+
+def depth_first_search(initial_state, goal_state, grids, main_display):
+
+    maze = problem.Maze(initial_state, goal_state)
+
+    if maze.goal_test(initial_state):
+        return [], 0
+
+    #Initialize the frontier with initial state
+    frontier = queue.LifoQueue()
+    frontier.put(initial_state)
+
+    explored = []
+
+    iter = 0
+    while not frontier.empty():
+        node = frontier.get()
+        if node in explored:       #Remove repetitive nodes that has been explored
+            continue
+        if node != initial_state:
+            node.change_color("yellow", True)       #Change color of explored node to yellow
+        explored.append(node)
+
+        for action in node.actions:
+            if action not in explored and action.color != "gray":
+                action.set_parent(node)
+                if maze.goal_test(action):
+                    return action.path(initial_state)[0], action.path(initial_state)[1], iter
+                action.change_color("blue", solving=True)
+                frontier.put(action)
         draw_and_update(grids, main_display)
         iter += 1
 
@@ -105,7 +140,7 @@ def informed_search(initial_state, goal_state, grids, main_display):
             node.change_color("yellow", True)       #Change color of explored node to yellow
         explored.append(node)
 
-        for action in maze.actions(node):
+        for action in node.actions:
             if action.color != "gray" and action not in explored:
                 if action in frontier.heap:
                     id = frontier.index(action)
