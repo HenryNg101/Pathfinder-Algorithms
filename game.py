@@ -1,8 +1,6 @@
 import pygame
 import sys
 import math
-import matplotlib
-import numpy
 import problem
 import solution
 from tkinter import messagebox
